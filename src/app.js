@@ -17,11 +17,12 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({
-    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
+    message: 'Hello this is the Aljazeera Properties API',
   });
 });
 
 app.use('/api/v1', api);
+
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
