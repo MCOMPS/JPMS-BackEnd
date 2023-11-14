@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 
+
 const { auth, requiresAuth  } = require('express-openid-connect');
 
 const config = {
@@ -17,7 +18,9 @@ const config = {
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
-const api = require('./api');
+// const api = require('./routes');
+const mountRoutes = require('./routes');
+
 
 const app = express();
 
@@ -50,6 +53,7 @@ const connected = {
   message: "This is a protected API that you can only view if logged in"
 }
 
+
 app.get('/callback', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "logged in" : "Not Logged in");
 })
@@ -58,9 +62,12 @@ app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
 
-app.use('/api/v1', api);
+mountRoutes(app);
+
+// app.use('/api/v1', api);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
+
 
 module.exports = app;
