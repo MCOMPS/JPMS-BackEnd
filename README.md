@@ -2,33 +2,43 @@
 
 How to use:
 
-## 1. Install:
+#### 1. Install:
 ```sh
 npm install
 ```
+Avoid using yarn.
 
-## TODO: Create Database
-## TODO: Create Models
-## TODO: Populate Tables
-
-## 2. Run Development
+#### 2. Run Development
 ```sh
 npm run dev
 ```
 
-# Other Commands:
+#### TODO: Create Database
+```sql
+CREATE DATABASE jpms
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+```
+#### TODO: Create Models
+#### TODO: Populate Tables
 
-## Lint
+
+## Other Commands:
+
+#### Lint
 ```sh
 npm run lint
 ```
 
-## Test
+#### Test
 ```sh
 npm test
 ```
 
-
+<br />
 Includes API Server utilities:
 
 * [morgan](https://www.npmjs.com/package/morgan)
