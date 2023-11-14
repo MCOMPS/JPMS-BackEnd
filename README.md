@@ -58,6 +58,8 @@ Includes API Server utilities:
 * [pg](https://www.npmjs.com/package/pg)
   * node-postgres is a Non-blocking PostgreSQL client for Node.js. 
   * Pure JavaScript and optional native libpq bindings.
+* [express-promise-router](https://www.npmjs.com/package/express-promise-router)
+  * express-promise-router is a simple wrapper for Express 4's Router that allows middleware to return promises. This package makes it simpler to write route handlers for Express when dealing with promises by reducing duplicate code.
 <br>
 <br>
 
