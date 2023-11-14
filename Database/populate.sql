@@ -1,14 +1,3 @@
-
-
-CREATE DATABASE "JazeeraProperties"
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'English_United States.1252'
-    LC_CTYPE = 'English_United States.1252'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
 	
 CREATE TABLE Property (
     PropertyID INT PRIMARY KEY,
@@ -16,9 +5,9 @@ CREATE TABLE Property (
     PropertyType VARCHAR(255),
     Address VARCHAR(255),
     AvailabilityStatus BOOLEAN,
-    Rent DECIMAL(10, 2)
-   
+    Rent DECIMAL(10, 2)  
 );
+
 CREATE TABLE Tenant (
     TenantID INT PRIMARY KEY,
     FirstName VARCHAR(255),
