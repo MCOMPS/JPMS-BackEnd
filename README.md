@@ -1,10 +1,33 @@
-# Express API Starter
+# JPMS Backend
 
-How to use this template:
+How to use:
 
+## 1. Install:
 ```sh
-npx create-express-api --directory my-api-name
+npm install
 ```
+
+## TODO: Create Database
+## TODO: Create Models
+## TODO: Populate Tables
+
+## 2. Run Development
+```sh
+npm run dev
+```
+
+# Other Commands:
+
+## Lint
+```sh
+npm run lint
+```
+
+## Test
+```sh
+npm test
+```
+
 
 Includes API Server utilities:
 
@@ -28,26 +51,4 @@ Development utilities:
 * [supertest](https://www.npmjs.com/package/supertest)
   * HTTP assertions made easy via superagent.
 
-## Setup
 
-```
-npm install
-```
-
-## Lint
-
-```
-npm run lint
-```
-
-## Test
-
-```
-npm test
-```
-
-## Development
-
-```
-npm run dev
-```
