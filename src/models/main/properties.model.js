@@ -37,8 +37,8 @@ exports.updatePropertyInstance = async (property_id, updates) => {
     updateProperty(propertyObj, updates);
 
     // 4. perform the update on the database
-    const updateQuery = "UPDATE properties SET building_name = $1, property_number = $2, total_rooms = $3, property_type = $4 WHERE property_id = $5";
-    const values = [propertyObj.building_name, propertyObj.property_number, propertyObj.total_rooms, propertyObj.property_type, property_id];
+    const updateQuery = "UPDATE properties SET building_name = $1, property_number = $2, total_rooms = $3, property_type = $4,coordinate_x = $5,coordinate_y = $6 WHERE property_id = $7";
+    const values = [propertyObj.building_name, propertyObj.property_number, propertyObj.total_rooms, propertyObj.property_type,propertyObj.coordinate_x,propertyObj.coordinate_y ,property_id];
     return await db.query(updateQuery, values);
 } // end of updatePropertyInstance
 
