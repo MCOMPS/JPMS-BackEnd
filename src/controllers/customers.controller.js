@@ -25,7 +25,7 @@ class CustomersController {
       }
 
       // 3. else, return the Customer
-      return res.status(200).json(result.rows[0]);
+      return res.status(200).json(result.rows);
     } catch (error) {
       console.log(error);
       next(error);
@@ -46,7 +46,7 @@ class CustomersController {
         throw new Error(`The Customer object is empty`);
 
       // 3. query the database
-      const result = await this.model.createCustomer(customer);
+      const result = await this.model.addCustomer(customer);
 
       res.status(201).json({
         message: "Customer created successfully",
@@ -63,7 +63,7 @@ class CustomersController {
       const updates = req.body;
 
       // if updates object is empty, throw an error
-      if (Objects.keys(updates).length === 0)
+      if (Object.keys(updates).length === 0)
         throw new Error(`The updates object empty`);
 
       // 1. query the database
@@ -92,7 +92,7 @@ class CustomersController {
 
       res.status(200).json({
         message: `customer with id ${customer_id} deleted successfully`,
-        customerData: results.rows[0],
+        customerData: result.rows[0],
       });
     } catch (error) {
       next(error);
