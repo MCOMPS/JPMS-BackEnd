@@ -18,7 +18,8 @@ exports.getCustomer = async (customer_id)=> {
     return await db.query(query, values);
 }
 // Function to add a new customer to the database
-exports.addCustomer = async (name,email,phone_country_code,phone_number,date_of_birth,nationality,gender,password_hashed) => {
+exports.addCustomer = async (customer) => {
+    const {name,email,phone_country_code,phone_number,date_of_birth,nationality,gender,password_hashed} = customer;
     const query = "INSERT INTO customers(name,email,phone_country_code,phone_number,date_of_birth,nationality,gender,password_hashed) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)";
     // pass the values from the customer id to the sql statment
     // done to avoid sql injection
