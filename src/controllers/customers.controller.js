@@ -17,16 +17,17 @@ class CustomersController {
       }
 
       // 1. query the database
-      const customers = await this.model.getAllCustomers();
+      const result = await this.model.getAllCustomers();
 
       // 2. if the database returns an error, throw an error
-      if (customers instanceof Error) {
+      if (result instanceof Error) {
         throw new Error(`Error getting Customer ${result.message}`);
       }
 
       // 3. else, return the Customer
       return res.status(200).json(result.rows[0]);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }; // end of getAllCustomers()
