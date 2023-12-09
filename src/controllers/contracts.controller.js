@@ -13,26 +13,20 @@ class ContractsController {
                 if (result instanceof Error)
                     throw new Error(`Error getting contract: ${result.message}`);
 
-                return res.status(200).json({
-                    data: result.rows[0]
-                });
+                return res.status(200).json(result.rows[0]);
                 // get all contracts:
             } else if (req.query.active) {
               const result = await this.model.getActiveContracts(req.query.active);
               if (result instanceof Error)
                   throw new Error(`Error getting active contracts: ${result.message}`);
-                return res.status(200).json({
-                    data: result.rows
-                });
+                return res.status(200).json(result.rows);
             } else {
                 const contracts = await this.model.getAllContracts();
 
                 if (contracts instanceof Error)
                     throw new Error(`Error getting contracts: ${contracts.message}`);
 
-                res.status(200).json({
-                    data: contracts.rows
-                });
+                res.status(200).json(contracts.rows);
             }
         } catch(error){
             next(error);

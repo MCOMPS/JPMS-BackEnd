@@ -34,6 +34,23 @@ class PropertiesController {
     }
   }; // end of getAllProperties
 
+  getProperty = async (req, res, next) => {
+    try {
+      const { property_id } = req.params;
+      // 1. query the database
+      const result = await this.model.getPropertyInstance(property_id);
+     
+      // 2. if the database returned an error, throw an error
+      if (result instanceof Error)
+        throw new Error(`Error getting propertys: ${result.message}`);
+
+      // 3. else, return the property
+      res.status(200).json(result.rows[0]);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   createPropertyInstance = async (req, res, next) => {
     try {
       // 1. get the property from the request body
