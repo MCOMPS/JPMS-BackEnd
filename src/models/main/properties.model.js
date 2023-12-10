@@ -11,10 +11,10 @@ exports.getPropertyInstance = async (property_id) => {
 } // end of getPropertyInstance
 
 exports.createPropertyInstance = async (property) => {
-    const values = [property.building_name, property.property_number, property.total_rooms, property.property_type];
+    const values = [property.building_name, property.property_number, property.total_rooms, property.property_type, property.coordinate_x, property.coordinate_y];
     const query = "INSERT INTO public.properties(\n" +
-        "\t building_name, property_number, total_rooms, property_type)\n" +
-        "\tVALUES ($1, $2, $3, $4);"
+        "\t building_name, property_number, total_rooms, property_type, coordinate_x, coordinate_y)\n" +
+        "\tVALUES ($1, $2, $3, $4, $5, $6);"
     return await db.query(query, values);
 } // end of createPropertyInstance
 
