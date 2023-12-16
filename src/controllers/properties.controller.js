@@ -1,4 +1,5 @@
 const IDgenerator = require("../utils/IDgenerator");
+const HTTP404 = require("../lib/custom-errors/HTTP404");
 
 class PropertiesController {
   constructor(pathPassed) {
@@ -8,10 +9,10 @@ class PropertiesController {
 
   getAllProperties = async (req, res, next) => {
     try {
-      // get a property instance given property_id
-      if (req.query.property_id) {
+      // get a property instance given property id
+      if (req.query.id) {
         const result = await this.model.getPropertyInstance(
-          req.query.property_id
+          req.query.id
         );
 
         if (result instanceof Error)
@@ -36,14 +37,16 @@ class PropertiesController {
 
   getProperty = async (req, res, next) => {
     try {
-      const { property_id } = req.params;
+      const { id } = req.params;
       // 1. query the database
-      const result = await this.model.getPropertyInstance(property_id);
+      const result = await this.model.getPropertyInstance(id);
      
       // 2. if the database returned an error, throw an error
       if (result instanceof Error)
         throw new Error(`Error getting propertys: ${result.message}`);
-
+      if (result.rows.length === 0)
+        throw new HTTP404(`No property with id ${id}`);
+      
       // 3. else, return the property
       res.status(200).json(result.rows[0]);
     } catch (error) {
@@ -78,7 +81,7 @@ class PropertiesController {
 
   updatePropertyInstance = async (req, res, next) => {
     try {
-      const property_id = req.query.property_id;
+      const id = req.params.id;
       const updates = req.body;
 
       // if updates object is empty, throw an error
@@ -86,12 +89,12 @@ class PropertiesController {
         throw new Error(`The updates object is empty`);
 
       const result = await this.model.updatePropertyInstance(
-        property_id,
+        id,
         updates
       );
 
       res.status(200).json({
-        message: `Property with id ${property_id} updated successfully`,
+        message: `Property with id ${id} updated successfully`,
         result: result,
       });
     } catch (error) {
@@ -101,11 +104,11 @@ class PropertiesController {
 
   deleteProperty = async (req, res, next) => {
     try {
-      const property_id = req.query.property_id;
+      const id = req.query.id;
 
-      const result = await this.model.deleteProperty(property_id);
+      const result = await this.model.deleteProperty(id);
       res.status(200).json({
-        message: `Property with id ${property_id} deleted successfully`,
+        message: `Property with id ${id} deleted successfully`,
         propertyData: result.rows[0],
       });
     } catch (error) {
