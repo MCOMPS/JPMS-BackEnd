@@ -8,7 +8,7 @@ module.exports = (modelPath)  => {
     router.get('/', controller.getAllProperties);
     router.get('/:id', controller.getProperty);
     router.post('/', controller.createPropertyInstance);
-    router.put('/:id', controller.updatePropertyInstance);
+    router.patch('/:id', controller.updatePropertyInstance);
     router.delete('/', controller.deleteProperty);
 
     return router;

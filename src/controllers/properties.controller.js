@@ -9,32 +9,54 @@ class PropertiesController {
 
   getAllProperties = async (req, res, next) => {
     try {
-      // get a property instance given property id
-      if (req.query.id) {
-        const result = await this.model.getPropertyInstance(
-          req.query.id
+      // Check if property IDs are specified in the query
+      const propertyIds = req.query.id;
+
+      if (propertyIds) {
+        // Convert propertyIds to an array if it's a single value
+        const idArray = Array.isArray(propertyIds) ? propertyIds : [propertyIds];
+
+        // Fetch properties for the specified IDs
+        const properties = await Promise.all(
+          idArray.map(async (id) => {
+            const result = await this.model.getPropertyInstance(id);
+
+            if (result instanceof Error) {
+              // Handle errors for individual property requests
+              throw new Error(`Error getting property with ID ${id}: ${result.message}`);
+            }
+
+            // Return the property if it exists, or null otherwise
+            return result.rows.length > 0 ? result.rows[0] : null;
+          })
         );
 
-        if (result instanceof Error)
-          throw new Error(`Error getting property: ${result.message}`);
-
-        return res.status(200).json(result.rows[0]);
+        return res.status(200).json(properties);
       }
 
-      // 1. query the database
-      const properties = await this.model.getAllProperties();
+      // If no specific property IDs are requested, get all properties
+      const { _start, _end } = req.query;
+      const start = parseInt(_start) || 0;
+      const end = parseInt(_end) || Infinity;
 
-      // 2. if the database returned an error, throw an error
-      if (properties instanceof Error)
-        throw new Error(`Error getting properties: ${properties.message}`);
+      const allProperties = await this.model.getAllProperties();
 
-      // 3. else, return the propert
-      res.status(200).json(properties.rows);
+      if (allProperties instanceof Error) {
+        // Handle errors for fetching all properties
+        throw new Error(`Error getting all properties: ${allProperties.message}`);
+      }
+
+      // Apply pagination
+      const paginatedProperties = allProperties.rows.slice(start, end);
+
+      // Return paginated properties
+      res.status(200).json(paginatedProperties);
     } catch (error) {
+      // Handle errors, you may want to check for specific error types here
       next(error);
     }
-  }; // end of getAllProperties
-
+  };
+  
   getProperty = async (req, res, next) => {
     try {
       const { id } = req.params;
