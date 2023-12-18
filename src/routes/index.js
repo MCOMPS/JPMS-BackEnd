@@ -7,6 +7,7 @@ const contracts = require("./main/contracts.routes");
 const invoices = require("./main/invoices.routes");
 const customers = require("./main/customers.routes");
 const users = require("./users/users.routes");
+const caretakerProperties = require("./users/caretakerProperties.routes")
 
 module.exports = (app, modelMode) => {
   let modelPath;
@@ -25,4 +26,5 @@ module.exports = (app, modelMode) => {
   app.use("/invoices", invoices(modelPath));
   app.use("/customers", customers(modelPath));
   app.use("/users", users(modelPath));
+  app.use("/caretaker_properties", caretakerProperties(modelPath));
 };
