@@ -67,6 +67,8 @@ class UsersController {
           getUser = await this.model.getUserByEmail(idORemail);
         }else if((/^\d+$/).test(idORemail)){ // if its an Id get the usert by ID
           getUser = await this.model.getUserInstance(idORemail);
+        }else{
+          return res.status(400).json(null);
         }
         
         // check if the user exists 
