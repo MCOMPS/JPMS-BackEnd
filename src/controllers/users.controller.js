@@ -53,6 +53,39 @@ class UsersController {
       next(error);
     }
   }; // end of getAllUsers
+
+  // routing parameter implementation
+  getUser = async (req, res, next) => {
+    try {
+      // Retrieve userid and email from params
+      const { idORemail } = req.params;
+      // if the variable is there then
+      if (idORemail) {
+        let getUser;
+        // if its an email get the user by the email
+        if((/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(idORemail)){
+          getUser = await this.model.getUserByEmail(idORemail);
+        }else if((/^\d+$/).test(idORemail)){ // if its an Id get the usert by ID
+          getUser = await this.model.getUserInstance(idORemail);
+        }else{
+          return res.status(400).json(null);
+        }
+        
+        // check if the user exists 
+        if(getUser.rows.length > 0){
+          res.status(200).json(getUser.rows[0]);
+        }else{
+          res.status(404).json(null);
+        }
+          
+
+      }else{
+        throw new Error(' Parameter Email or ID must be provided.');
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
 } // end of UsersController
 
 module.exports = UsersController;
