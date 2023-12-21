@@ -7,7 +7,7 @@ class HTTP404 extends Error {
     if(message === undefined)
       this.message = this.name;
     else
-      this.message = message + ' Not Found, 404';
+      this.message = message + ', Not Found, 404';
 
   }
 }
