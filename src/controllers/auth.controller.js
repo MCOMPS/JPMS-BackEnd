@@ -17,7 +17,8 @@ class Auth {
       if (userInDb.rows.length === 0) throw new Error(`User not found`);
 
       const user = userInDb.rows[0];
-      // Bro shouldn't we implement bcrypt.compareSync here ???
+      // Bro shouldn't we implement bcrypt.compare here ???
+      
       if (user.password_hashed !== password) throw new Error(`Wrong password`);
       // check if user already has a token
       const tokenInDb = await this.model.getTokenByUserId(user.id);

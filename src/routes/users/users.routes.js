@@ -7,6 +7,7 @@ module.exports = (modelPath)  => {
     const controller = new UsersController(modelPath);
     router.get('/', controller.getAllUsers);
     router.get('/:idORemail', controller.getUser);
+    router.post('/', controller.createUser)
     // router.post('/', controller.createPropertyInstance);
     // router.patch('/:id', controller.updatePropertyInstance);
     // router.delete('/', controller.deleteProperty);

@@ -1,4 +1,5 @@
 const db = require("../index");
+const bcrypt = require('bcrypt');
 
 exports.getAllUsers = async () => {
     const query = "SELECT * FROM users";
@@ -16,17 +17,19 @@ exports.getUserByEmail = async (email) => {
 } // end of getUserByEmail
 
 exports.createUserInstance = async (user) => {
+    // hash user password
+    const password_hashed = await bcrypt.hash(user.password, 10);
     const values = [
         user.name,
         user.email,
         user.role,
-        user.password_hashed
+        password_hashed
     ];
 
     const query =
         "INSERT INTO users(" +
-        "name, email, role)" +
-        "VALUES ($1, $2, $3);"; // end of query
+        "name, email, role, password_hashed)" +
+        "VALUES ($1, $2, $3, $4);"; // end of query
 
     return await db.query(query, values);
 }

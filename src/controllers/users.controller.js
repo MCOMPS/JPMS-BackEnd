@@ -63,31 +63,60 @@ class UsersController {
       if (idORemail) {
         let getUser;
         // if its an email get the user by the email
-        if((/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(idORemail)){
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(idORemail)) {
           getUser = await this.model.getUserByEmail(idORemail);
-        }else if((/^\d+$/).test(idORemail)){ // if its an Id get the usert by ID
+        } else if (/^\d+$/.test(idORemail)) {
+          // if its an Id get the usert by ID
           getUser = await this.model.getUserInstance(idORemail);
-        }else{
+        } else {
           return res.status(400).json(null);
         }
-        
-        // check if the user exists 
-        if(getUser.rows.length > 0){
+
+        // check if the user exists
+        if (getUser.rows.length > 0) {
           res.status(200).json(getUser.rows[0]);
-        }else{
+        } else {
           res.status(404).json(null);
         }
-          
-
-      }else{
-        throw new Error(' Parameter Email or ID must be provided.');
+      } else {
+        throw new Error(" Parameter Email or ID must be provided.");
       }
     } catch (error) {
       next(error);
     }
   };
+
+  createUser = async (req, res, next) => {
+    try {
+      const user = req.body;
+  
+      if (Object.keys(user).length === 0) {
+        throw new Error("User is Empty");
+      }
+  
+      const result = await this.model.createUserInstance(user);
+  
+      if (result) {
+        res.status(201).json({
+          success: true,
+          message: "User Created Successfully",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  
+  };
+
+  checkUserPassword = (req,res,next)=>{
+    try {
+      
+    } catch (error) {
+      next(error);
+    }
+  }
 } // end of UsersController
 
-  createUser = async(req, res, next)
+
 
 module.exports = UsersController;
