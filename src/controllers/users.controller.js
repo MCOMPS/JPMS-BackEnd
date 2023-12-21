@@ -88,4 +88,6 @@ class UsersController {
   };
 } // end of UsersController
 
+  createUser = async(req, res, next)
+
 module.exports = UsersController;

@@ -2,11 +2,13 @@ class Auth {
   constructor(pathPassed) {
     this.basePath = pathPassed;
     this.model = require(`${this.basePath}/users/auth.model`);
+    
   } // end of constructor
 
   login = async (req, res, next) => {
     try {
       const { email, password } = req.body;
+      // check if user exists 
       const userInDb = await this.model.checkUser(email);
 
       if (userInDb instanceof Error)
@@ -15,6 +17,7 @@ class Auth {
       if (userInDb.rows.length === 0) throw new Error(`User not found`);
 
       const user = userInDb.rows[0];
+      // Bro shouldn't we implement bcrypt.compareSync here ???
       if (user.password_hashed !== password) throw new Error(`Wrong password`);
       // check if user already has a token
       const tokenInDb = await this.model.getTokenByUserId(user.id);

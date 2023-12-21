@@ -19,7 +19,8 @@ exports.createUserInstance = async (user) => {
     const values = [
         user.name,
         user.email,
-        user.role
+        user.role,
+        user.password_hashed
     ];
 
     const query =
