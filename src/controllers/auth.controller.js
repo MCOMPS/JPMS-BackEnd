@@ -18,8 +18,11 @@ class Auth {
 
       const user = userInDb.rows[0];
       // Bro shouldn't we implement bcrypt.compare here ???
-      
-      if (user.password_hashed !== password) throw new Error(`Wrong password`);
+      const checkPassword = await this.model.checkPassword(email,password);
+      if (!checkPassword){
+        throw new Error(`Wrong password`);
+      }
+
       // check if user already has a token
       const tokenInDb = await this.model.getTokenByUserId(user.id);
       if (tokenInDb instanceof Error)
@@ -93,6 +96,40 @@ class Auth {
       next(error);
     }
   }; // end of check
+
+  register = async (req, res, next) => {
+    try {
+
+      const roles = [ 'MANAGER', 'CARETAKER'];
+      const {name , email, password , role } = req.body;
+      
+      // test if the email is in the correct format
+      if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+        throw new Error("Email is in the wrong format");
+      }
+      // check if the name is in the correct format
+      if(!(/^[a-zA-z]+$/.test(name))){
+        throw new Error("Name is in the wrong format");
+      }
+      // check if the role exists
+      const found = roles.find((x) => x === role);
+      if(!found){
+        throw new Error("Role doesn't exist ");
+      }
+
+      const result = await this.model.createUserInstance(name, email, password, role);
+  
+      if (result) {
+        res.status(201).json({
+          success: true,
+          message: "User Created Successfully",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  
+  };
 }
 
 module.exports = Auth;

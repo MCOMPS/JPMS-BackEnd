@@ -8,6 +8,6 @@ module.exports = (modelPath) => {
     router.post('/login', controller.login);
     router.delete('/logout', controller.logout);
     router.patch('/check', controller.check);
-
+    router.post('/register', controller.register);
     return router;
 }

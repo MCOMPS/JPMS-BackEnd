@@ -2,22 +2,15 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const myPlaintextPassword = 's0/\/\P4$$w0rD';
 
-const generateHash = async (plaintext)=>{
-    try {
-        const hash = await bcrypt.hash(plaintext, saltRounds);
-    } catch (error) {
-        console.log(error);
-    }
-    return hash;
-}
-
-const testPassword = async (plaintext,hash)=>{
-    try{
-        const check = await bcrypt.compare(plaintext, hash);
-    }catch(error){
-        console.log(error);
-    }
+const testPassword = async (plaintext)=>{
+    const hash = await bcrypt.hash(plaintext, saltRounds);
+    const check = await bcrypt.compare(plaintext, hash);
     return check;
 }
+async function someAsyncFunction() {
+    const result = await testPassword('password');
+    console.log(result); 
+}
 
+someAsyncFunction();
 
