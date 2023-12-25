@@ -113,6 +113,25 @@ class CaretakerProperties {
     }
   }; // end of getJoinedCaretakerPropertiesInstance
 
+  getPropertiesByCaretakerId = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await this.model.getPropertiesByCaretakerId(id);
+
+      if (result instanceof Error) {
+        // handle errors for individual caretaker requests
+        throw new Error(
+          `Error getting caretaker with ID ${id}: ${result.message}`
+        );
+      }
+
+      // return the caretaker if it exists, or null otherwise
+      res.status(200).json(result.rows);
+    } catch (error) {
+      next(error);
+    }
+  }; // end of getPropertiesByCaretakerId
+  
   createCaretakerInstance = async (req, res, next) => {
     try {
       const caretaker = req.body;
@@ -131,6 +150,8 @@ class CaretakerProperties {
       next(error);
     }
   }; // end of createCaretakerInstance
+
+
 
   updateCaretakerInstance = async (req, res, next) => {
     try {

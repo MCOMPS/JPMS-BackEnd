@@ -17,10 +17,11 @@ class Auth {
       if (userInDb.rows.length === 0) throw new Error(`User not found`);
 
       const user = userInDb.rows[0];
-      // Bro shouldn't we implement bcrypt.compare here ???
       const checkPassword = await this.model.checkPassword(email,password);
       if (!checkPassword){
         throw new Error(`Wrong password`);
+      } else {
+        console.log("Password is correct");
       }
 
       // check if user already has a token
@@ -48,7 +49,7 @@ class Auth {
         .status(200)
         .json({
           token: token,
-          user: { name: user.name, email: user.email, role: user.role },
+          user: { id: user.id, name: user.name, email: user.email, role: user.role },
         });
     } catch (error) {
       next(error);

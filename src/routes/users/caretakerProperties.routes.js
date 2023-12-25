@@ -9,6 +9,7 @@ module.exports = (modelPath) => {
     router.get('/', controller.joinCaretakerProperties);
     // router.get('/:id', controller.getCaretakerInstance);
     router.get('/:id', controller.getJoinedCaretakerPropertiesInstance);
+    router.get('/:id/properties', controller.getPropertiesByCaretakerId);
     router.post('/', controller.createCaretakerInstance);
     router.patch('/:id', controller.updateCaretakerInstance);
     // router.delete('/', controller.deleteProperty);

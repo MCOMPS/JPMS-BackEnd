@@ -29,6 +29,16 @@ exports.getJoinedCaretakerPropertiesInstance = async (caretaker_id) => {
   return await db.query(query, [caretaker_id]);
 };
 
+exports.getPropertiesByCaretakerId = async (caretaker_id) => {
+    const query = "SELECT properties.id, properties.name, properties.total_rooms, properties.property_type, properties.coordinate_x, properties.coordinate_y, properties.img, properties.description, properties.rent, properties.location, properties.amenities " +
+        "FROM properties " +
+        "INNER JOIN caretaker_properties ON properties.id = ANY(caretaker_properties.property_ids) " +
+        "WHERE caretaker_properties.caretaker_id = $1";
+
+    return await db.query(query, [caretaker_id]);
+}; // end of getPropertiesByCaretakerId
+
+
 exports.createCaretakerInstance = async (caretaker) => {
   // insert into users table (name, email, role)
   const values = [
