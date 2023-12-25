@@ -45,7 +45,7 @@ exports.createCaretakerInstance = async (caretaker) => {
     caretaker.name,
     caretaker.email,
     "caretaker", // role is always "caretaker
-    "123", // temporary password for now
+    "$2b$10$RQTijh9J0QoTq4GVd2CL3.C8DxKFMPF2Tb61.1uOdmSBtn7mugYDW", // temporary hashed password for now
   ];
   const query =
     "INSERT INTO users (name, email, role, password_hashed) VALUES ($1, $2, $3, $4)";
