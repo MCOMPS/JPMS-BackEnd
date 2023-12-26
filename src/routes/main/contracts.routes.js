@@ -8,6 +8,7 @@ module.exports = (modelPath)  => {
     const controller = new ContractsController(modelPath);
 
     router.get('/', controller.getAllContracts);
+    router.get('/:id', controller.getAContract);
     router.post('/', controller.addAContract);
     router.delete('/', controller.archiveContract);
     router.put('/', controller.updateAContract);

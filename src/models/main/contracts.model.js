@@ -2,12 +2,12 @@ const IDgenerator = require('../../utils/IDgenerator');
 const db = require("../index");
 
 exports.getAllContracts = async () => {
-    const query = "Select * from contracts";
+    const query = "select * from contracts";
     return await db.query(query);
 }
 
 exports.getAContract = async (contract_id)=> {
-    const query = "Select * from contracts where contract_id=$1";
+    const query = "select * from contracts where id=$1";
     return await db.query(query, [contract_id]);
 }
 
