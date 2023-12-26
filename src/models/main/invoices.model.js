@@ -7,7 +7,7 @@ exports.getAllInvoices = async () => {
 }
 
 exports.getAnInvoice = async (invoice_id) => {
-    const query = "select * from invoices where invoice_id=$1";
+    const query = "select * from invoices where id=$1";
     return await db.query(query, [invoice_id]);
 }
 
