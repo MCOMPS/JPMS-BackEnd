@@ -6,7 +6,7 @@ const OnboardingController = require('../../controllers/onboarding.controller');
 module.exports = (modelPath)  => {
     const controller = new OnboardingController(modelPath);
 
-    router.post('/', controller.makeNewTenant);
+    router.post('/', controller.onboardNewTenant);
 
     return router;
 }
