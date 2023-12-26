@@ -1,15 +1,20 @@
 const IDgenerator = require("../../utils/IDgenerator");
 const db = require("../index");
 
+exports.getAllTenants = async () => {
+    const query = "select * from tenants";
+    return await db.query(query);
+}; // end of getAllTenants
 
-exports.getAllTenants = async (property_id) => {
+
+exports.getTenantsByPropertyId = async (property_id) => {
     const query = "Select * from tenants where property_id=$1";
     const values = [property_id];
     return await db.query(query, values);
 }
 
 exports.getTenant = async (tenant_id) => {
-    const query = "Select * from tenants where tenant_id=$1";
+    const query = "Select * from tenants where id=$1";
     const values = [tenant_id];
     return await db.query(query, values);
 }

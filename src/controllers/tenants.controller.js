@@ -6,6 +6,69 @@ class TenantsController {
     }
 
     getAllTenants = async (req, res, next) => {
+        try {
+            // check if tenant ids are specified in the query
+            const tenantIds = req.query.id;
+            if (tenantIds) {
+                // convert tenantIds to an array if it's a single value
+                const idArray = Array.isArray(tenantIds) ? tenantIds : [tenantIds];
+
+                // fetch tenants for the specified ids
+                const tenants = await Promise.all(
+                    idArray.map(async (id) => {
+                        const result = await this.model.getTenant(id);
+                        if (result instanceof Error) {
+                            // handle errors for individual tenant requests
+                            throw new Error(`Error getting tenant with id ${id}: ${result.message}`);
+                        }
+                        // return the tenant if it exists, or null otherwise
+                        return result.rows.length > 0 ? result.rows[0] : null;
+                    })
+                );
+
+                return res.status(200).json(tenants);
+            }
+
+            // if no specific tenant ids are requested, get all tenants
+            const { _start, _end } = req.query;
+            const start = parseInt(_start) || 0;
+            const end = parseInt(_end) || Infinity;
+
+            const allTenants = await this.model.getAllTenants();
+            if (allTenants instanceof Error) {
+                // handle errors for fetching all tenants
+                throw new Error(`Error getting all tenants: ${allTenants.message}`);
+            }
+
+            // apply pagination
+            const paginatedTenants = allTenants.rows.slice(start, end);
+
+            // return paginated tenants
+            res.status(200).json(paginatedTenants);
+            
+        } catch(error){
+            next(error);
+        } 
+
+    }; // end of getAllTenants
+
+
+    getTenant = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const result = await this.model.getTenant(id);
+            if (result instanceof Error) {
+                // handle errors for individual tenant requests
+                throw new Error(`Error getting tenant with id ${id}: ${result.message}`);
+            }
+            // return the tenant if it exists, or null otherwise
+            return res.status(200).json(result.rows.length > 0 ? result.rows[0] : null);
+        } catch(error){
+            next(error);
+        }
+    }; // end of getTenant
+
+    getTenantsByPropertyId = async (req, res, next) => {
         if (req.query.tenant_id){
 
             try{
@@ -26,7 +89,7 @@ class TenantsController {
         try {
 
             const property_id = req.query.property_id;
-            const results = await this.model.getAllTenants(property_id);
+            const results = await this.model.getTenantsByPropertyId(property_id);
 
             if(results instanceof Error)
                 throw new Error(`Error getting tenants: ${results.message}`);

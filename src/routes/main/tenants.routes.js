@@ -5,6 +5,7 @@ const TenantsController = require('../../controllers/tenants.controller');
 module.exports = (modelPath) => {
     const controller = new TenantsController(modelPath);
     router.get('/', controller.getAllTenants);
+    router.get('/:id', controller.getTenant);   
     router.post('/', controller.addTenant);
     router.put('/', controller.updateTenant);
     router.patch('/move-to-room', controller.moveTenantToRoom);
