@@ -9,6 +9,7 @@ const customers = require("./main/customers.routes");
 const caretakerProperties = require("./users/caretakerProperties.routes")
 const auth = require("./users/auth.routes");
 const onboarding = require("./tenantOnboarding/onboarding.routes");
+const payments = require("./main/payments.routes");
 
 module.exports = (app, modelMode) => {
   let modelPath;
@@ -29,4 +30,5 @@ module.exports = (app, modelMode) => {
   app.use("/caretaker_properties", caretakerProperties(modelPath));
   app.use("/auth", auth(modelPath));
   app.use("/onboarding", onboarding(modelPath));
+  app.use("/payments", payments(modelPath));
 };
