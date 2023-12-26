@@ -6,31 +6,97 @@ class CustomersController {
 
   getAllCustomers = async (req, res, next) => {
     try {
-      // get a customer record given customer_id
-      if (req.query.customer_id) {
-        const result = await this.model.getCustomer(req.query.customer_id);
+      // check if customer ids are specified in the query
+      const customerIds = req.query.customer_id;
 
-        if (result instanceof Error)
-          throw new Error(`Error getting customer: ${result.message}`);
+      if (customerIds) {
+        // convert customerIds to an array if it's a single value
+        const idArray = Array.isArray(customerIds)
+          ? customerIds
+          : [customerIds];
 
-        return res.status(200).json(result.rows[0]);
+        // fetch customers for the specified ids
+        const customers = await Promise.all(
+          idArray.map(async (id) => {
+            const result = await this.model.getCustomer(id);
+            if (result instanceof Error) {
+              // handle errors for individual customer requests
+              throw new Error(
+                `Error getting customer with id ${id}: ${result.message}`
+              );
+            }
+            // return the customer if it exists, or null otherwise
+            return result.rows.length > 0 ? result.rows[0] : null;
+          })
+        );
+
+        return res.status(200).json(customers);
       }
 
-      // 1. query the database
-      const result = await this.model.getAllCustomers();
+      // if no specific customer ids are requested, get all customers
+      const { _start, _end } = req.query;
+      const start = parseInt(_start) || 0;
+      const end = parseInt(_end) || Infinity;
 
-      // 2. if the database returns an error, throw an error
-      if (result instanceof Error) {
-        throw new Error(`Error getting Customer ${result.message}`);
+      const allCustomers = await this.model.getAllCustomers();
+      if (allCustomers instanceof Error) {
+        // handle errors for fetching all customers
+        throw new Error(`Error getting all customers: ${allCustomers.message}`);
       }
 
-      // 3. else, return the Customer
-      return res.status(200).json(result.rows);
+      // return the requested customers
+      return res.status(200).json(allCustomers.rows.slice(start, end));
     } catch (error) {
-      console.log(error);
       next(error);
     }
-  }; // end of getAllCustomers()
+  }; // end of getAllCustomers
+
+  getCustomer = async (req, res, next) => {
+    try {
+      // get the customer id from the request params
+      const { id } = req.params;
+
+      // query the database
+      const result = await this.model.getCustomer(id);
+
+      // if the database returns an error, throw an error
+      if (result instanceof Error)
+        throw new Error(`Error getting customer ${result.message}`);
+
+      // else, return the customer
+      return res.status(200).json(result.rows[0]);
+    } catch (error) {
+      next(error);
+    }
+  }; // end of getCustomer()
+
+  // getAllCustomers = async (req, res, next) => {
+  //   try {
+  //     // get a customer record given customer_id
+  //     if (req.query.customer_id) {
+  //       const result = await this.model.getCustomer(req.query.customer_id);
+
+  //       if (result instanceof Error)
+  //         throw new Error(`Error getting customer: ${result.message}`);
+
+  //       return res.status(200).json(result.rows[0]);
+  //     }
+
+  //     // 1. query the database
+  //     const result = await this.model.getAllCustomers();
+
+  //     // 2. if the database returns an error, throw an error
+  //     if (result instanceof Error) {
+  //       throw new Error(`Error getting Customer ${result.message}`);
+  //     }
+
+  //     // 3. else, return the Customer
+  //     return res.status(200).json(result.rows);
+  //   } catch (error) {
+  //     console.log(error);
+  //     next(error);
+  //   }
+  // }; // end of getAllCustomers()
 
   createCustomer = async (req, res, next) => {
     try {
