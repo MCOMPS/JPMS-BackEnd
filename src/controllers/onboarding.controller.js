@@ -1,8 +1,28 @@
+// const axios = require('axios/dist/node/axios.cjs');
+const axios = require("axios");
+
+const URL = "http://localhost:3000";
+
 class OnboardingController {
   constructor(pathPassed) {
     this.basePath = pathPassed;
     this.model = require(`${this.basePath}/tenantOnboarding/onboarding.model`);
   }
+
+  testGetFromStripeEndpoint = async (req, res, next) => {
+    await axios.get(`${URL}/stripe`).then(
+      (response) => {
+        console.log("from onboarding", response.data);
+        res.status(200).json(response.data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    res.status(500).json({
+      message: "FAILED",
+    });
+  };
 
   onboardNewTenant = async (req, res, next) => {
     try {
@@ -16,8 +36,14 @@ class OnboardingController {
       );
       if (makePayment instanceof Error) throw Error("Error making payment");
 
+      let product_id = "";
+      await axios.post(`${URL}/stripe/product`, {name: tenant.ic_no}).then(response => {
+        console.log("from onboardNewTenat, product id: ", response.data.id)
+        product_id = response.data.id;
+      });
       const makeContract = await this.model.makeInitialContract(
         contract,
+        product_id,
         makeTenant.rows[0].id
       );
       if (makeContract instanceof Error) throw Error("Error making contract");

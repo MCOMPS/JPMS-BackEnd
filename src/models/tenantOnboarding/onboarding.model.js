@@ -50,7 +50,7 @@ exports.makePayment = async (payment, tenant_id) => {
   return result;
 }; // end of makePayment
 
-exports.makeInitialContract = async (contract, tenant_id) => {
+exports.makeInitialContract = async (contract, product_id, tenant_id) => {
   const values = [
     contract.contract_start,
     contract.contract_end,
@@ -59,13 +59,14 @@ exports.makeInitialContract = async (contract, tenant_id) => {
     true,
     contract.property_id,
     tenant_id,
+    product_id,
   ];
 
   if (contract.notes === null || contract.notes === undefined) values[3] = "";
 
   const query =
-    "INSERT INTO contracts(contract_start, contract_end, rent, notes, active, property_id, tenant_id)" +
-    " VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id";
+    "INSERT INTO contracts(contract_start, contract_end, rent, notes, active, property_id, tenant_id, stripe_product_id)" +
+    " VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id";
   return await db.query(query, values);
 }; // end of makeInitialContract
 

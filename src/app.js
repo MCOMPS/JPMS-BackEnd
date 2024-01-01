@@ -6,20 +6,20 @@ const winston = require("winston");
 const morgan = require("morgan");
 const cors = require("cors");
 const mountRoutes = require("./routes");
-const errorHandler = require("./middlewares/errorHandler.middleware"); 
-  
+const errorHandler = require("./middlewares/errorHandler.middleware");
+
 // Configure Winston logger
 const logger = winston.createLogger({
-    transports: [
-      new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          winston.format.json({ prettyPrint: true }) // Use JSON format for better structured logs
-        ),
-      }),
-      // Add additional transports as needed (e.g., file, database)
-    ],
-  });
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json({ prettyPrint: true }) // Use JSON format for better structured logs
+      ),
+    }),
+    // Add additional transports as needed (e.g., file, database)
+  ],
+});
 
 // Create a stream object with a 'write' function that will be used by Morgan
 const stream = {
@@ -36,21 +36,23 @@ const stream = {
 const makeApp = (modelMode) => {
   const app = express();
 
+  app.use(cors({ origin: "*", exposedHeaders: "Content-Range" }));
+
   app.use(express.json());
   // Use Morgan middleware with the custom stream and format
-//   app.use(morgan("combined", { stream }));
-    app.use(morgan('dev'));
+  //   app.use(morgan("combined", { stream }));
+  app.use(morgan("dev"));
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
   // Enable CORS for the client route
-  app.use(
-    cors({
-      origin: process.env.CLIENT_URL, // Allow requests from this origin
-      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-      credentials: true, // Include cookies in the CORS requests
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: process.env.CLIENT_URL, // Allow requests from this origin
+  //     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  //     credentials: true, // Include cookies in the CORS requests
+  //   })
+  // );
 
   // serve static files from 'public' folder:
   // app.use(express.static(path.join(__dirname, 'public')));

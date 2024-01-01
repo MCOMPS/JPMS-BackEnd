@@ -10,6 +10,7 @@ const caretakerProperties = require("./users/caretakerProperties.routes")
 const auth = require("./users/auth.routes");
 const onboarding = require("./tenantOnboarding/onboarding.routes");
 const payments = require("./main/payments.routes");
+const stripeee = require("./stripe.routes");
 
 module.exports = (app, modelMode) => {
   let modelPath;
@@ -31,4 +32,5 @@ module.exports = (app, modelMode) => {
   app.use("/auth", auth(modelPath));
   app.use("/onboarding", onboarding(modelPath));
   app.use("/payments", payments(modelPath));
+  app.use("/stripe", stripeee);
 };
