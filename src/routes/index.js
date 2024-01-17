@@ -6,10 +6,12 @@ const tenants = require("./main/tenants.routes");
 const contracts = require("./main/contracts.routes");
 const invoices = require("./main/invoices.routes");
 const customers = require("./main/customers.routes");
-const caretakerProperties = require("./users/caretakerProperties.routes")
+const caretakerProperties = require("./users/caretakerProperties.routes");
 const auth = require("./users/auth.routes");
 const onboarding = require("./tenantOnboarding/onboarding.routes");
 const payments = require("./main/payments.routes");
+const customerAccount = require("./users/customerAccount.routes");
+const myContracts = require("./client/myContracts.routes");
 const stripeee = require("./stripe.routes");
 
 module.exports = (app, modelMode) => {
@@ -32,5 +34,7 @@ module.exports = (app, modelMode) => {
   app.use("/auth", auth(modelPath));
   app.use("/onboarding", onboarding(modelPath));
   app.use("/payments", payments(modelPath));
+  app.use("/customer_account", customerAccount(modelPath));
+  app.use("/my_contracts", myContracts(modelPath));
   app.use("/stripe", stripeee);
 };

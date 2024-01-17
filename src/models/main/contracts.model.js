@@ -11,6 +11,11 @@ exports.getAContract = async (contract_id) => {
   return await db.query(query, [contract_id]);
 };
 
+exports.getContractsByTenantId = async (tenant_id) => {
+  const query = "select * from contracts where tenant_id=$1";
+  return await db.query(query, [tenant_id]);
+};
+
 exports.getActiveContracts = async (activeValue) => {
   const query = "select * from contracts where active=$1";
   return await db.query(query, [activeValue]);

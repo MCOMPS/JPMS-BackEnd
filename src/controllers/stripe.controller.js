@@ -1,4 +1,4 @@
-const stripe = require("stripe")("");
+const stripe = require("stripe")(process.env.TEST_KEY);
 
 class StripeController {
   getSomething = (req, res, next) => {
@@ -43,9 +43,7 @@ class StripeController {
   };
 
   createCheckout = async (req, res, next) => {
-    const successUrl =
-      "http://localhost:5174?success=true&session_id={CHECKOUT_SESSION_ID}";
-    const YOUR_DOMAIN = "http://localhost:5174";
+    const CUSTOMER_CLIENT_URL = process.env.CUSTOMER_CLIENT_URL;
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -55,8 +53,8 @@ class StripeController {
         },
       ],
       mode: "payment",
-      success_url: successUrl,
-      cancel_url: `${YOUR_DOMAIN}?canceled=true`,
+      success_url: `${CUSTOMER_CLIENT_URL}/paymentSuccess`,
+      cancel_url: `${CUSTOMER_CLIENT_URL}/paymentCanceled`,
     });
 
     console.log("Checkout session created:", session.id);
