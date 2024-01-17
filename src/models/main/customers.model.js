@@ -10,7 +10,7 @@ exports.getAllCustomers = async () => {
 // Function to retrieve a specific customer by customer_id from the database
 exports.getCustomer = async (customer_id)=> {
     // select all the info where the customer_id matches
-    const query = "SELECT * FROM customers WHERE customer_id=$1";
+    const query = "SELECT * FROM customers WHERE id=$1";
     // pass the values from the customer id to the sql statment
     // done to avoid sql injection
     const values = [customer_id];

@@ -6,9 +6,13 @@ const tenants = require("./main/tenants.routes");
 const contracts = require("./main/contracts.routes");
 const invoices = require("./main/invoices.routes");
 const customers = require("./main/customers.routes");
-const users = require("./users/users.routes");
-const caretakerProperties = require("./users/caretakerProperties.routes")
+const caretakerProperties = require("./users/caretakerProperties.routes");
 const auth = require("./users/auth.routes");
+const onboarding = require("./tenantOnboarding/onboarding.routes");
+const payments = require("./main/payments.routes");
+const customerAccount = require("./users/customerAccount.routes");
+const myContracts = require("./client/myContracts.routes");
+const stripeee = require("./stripe.routes");
 
 module.exports = (app, modelMode) => {
   let modelPath;
@@ -26,7 +30,11 @@ module.exports = (app, modelMode) => {
   app.use("/contracts", contracts(modelPath));
   app.use("/invoices", invoices(modelPath));
   app.use("/customers", customers(modelPath));
-  app.use("/users", users(modelPath));
   app.use("/caretaker_properties", caretakerProperties(modelPath));
   app.use("/auth", auth(modelPath));
+  app.use("/onboarding", onboarding(modelPath));
+  app.use("/payments", payments(modelPath));
+  app.use("/customer_account", customerAccount(modelPath));
+  app.use("/my_contracts", myContracts(modelPath));
+  app.use("/stripe", stripeee);
 };

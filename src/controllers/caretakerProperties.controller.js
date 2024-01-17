@@ -76,8 +76,64 @@ class CaretakerProperties {
     }
   }; // end of getCaretakerInstance
 
+  joinCaretakerProperties = async (req, res, next) => {
+    try {
+      const result = await this.model.joinCaretakerProperties();
+
+      if (result instanceof Error) {
+        // handle errors for individual caretaker requests
+        throw new Error(
+          `Error joining caretaker properties: ${result.message}`
+        );
+      }
+
+      // return the caretaker if it exists, or null otherwise
+      res.status(200).json(result.rows);
+    } catch (error) {
+      next(error);
+    }
+  }; // end of joinCaretakerProperties
+
+  getJoinedCaretakerPropertiesInstance = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await this.model.getJoinedCaretakerPropertiesInstance(id);
+
+      if (result instanceof Error) {
+        // handle errors for individual caretaker requests
+        throw new Error(
+          `Error getting caretaker with ID ${id}: ${result.message}`
+        );
+      }
+
+      // return the caretaker if it exists, or null otherwise
+      res.status(200).json(result.rows.length > 0 ? result.rows[0] : null);
+    } catch (error) {
+      next(error);
+    }
+  }; // end of getJoinedCaretakerPropertiesInstance
+
+  getPropertiesByCaretakerId = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await this.model.getPropertiesByCaretakerId(id);
+
+      if (result instanceof Error) {
+        // handle errors for individual caretaker requests
+        throw new Error(
+          `Error getting caretaker with ID ${id}: ${result.message}`
+        );
+      }
+
+      // return the caretaker if it exists, or null otherwise
+      res.status(200).json(result.rows);
+    } catch (error) {
+      next(error);
+    }
+  }; // end of getPropertiesByCaretakerId
+  
   createCaretakerInstance = async (req, res, next) => {
-    try{
+    try {
       const caretaker = req.body;
       const result = await this.model.createCaretakerInstance(caretaker);
 
@@ -90,12 +146,32 @@ class CaretakerProperties {
 
       // return the caretaker if it exists, or null otherwise
       res.status(200).json(result);
-    } catch(error){
+    } catch (error) {
       next(error);
     }
-  }
-} // end of CaretakerProperties
+  }; // end of createCaretakerInstance
 
 
+
+  updateCaretakerInstance = async (req, res, next) => {
+    try {
+      const caretaker = req.body;
+      const { id } = req.params;
+      const result = await this.model.updateCaretakerInstance(caretaker, id);
+
+      if (result instanceof Error) {
+        // handle errors for individual caretaker requests
+        throw new Error(
+          `Error updating caretaker with ID ${id}: ${result.message}`
+        );
+      }
+
+      // return the caretaker if it exists, or null otherwise
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }; // end of updateCaretakerInstance
+} // end of class CaretakerProperties
 
 module.exports = CaretakerProperties;
