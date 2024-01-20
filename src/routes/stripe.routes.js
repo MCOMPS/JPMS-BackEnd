@@ -6,7 +6,7 @@ const controller = new StripeController();
 router.post("/product", controller.createProduct);
 router.post("/price", controller.createPrice);
 router.get("/", controller.getSomething);
-router.post("/checkout", controller.createCheckout);
+router.post("/checkout/:property_id", controller.createCheckout);
 router.post("/process-payment", controller.processPayment);
 
 module.exports = router;

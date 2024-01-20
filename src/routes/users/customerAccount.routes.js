@@ -8,6 +8,8 @@ module.exports = (modelPath) => {
   router.get("/", controller.getSomething);
   router.post("/new", controller.makeNewCustomer);
   router.get("/getall", controller.getAllCustomers);
+  router.get("/getTenantInfo", controller.getTenantByAuth0Id);
+  router.post("/updateProfile", controller.updateProfile);
 
   return router;
 };
