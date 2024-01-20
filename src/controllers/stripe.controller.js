@@ -45,6 +45,8 @@ class StripeController {
   createCheckout = async (req, res, next) => {
     const CUSTOMER_CLIENT_URL = process.env.CUSTOMER_CLIENT_URL;
 
+    const { property_id } = req.params;
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -53,7 +55,7 @@ class StripeController {
         },
       ],
       mode: "payment",
-      success_url: `${CUSTOMER_CLIENT_URL}/paymentSuccess`,
+      success_url: `${CUSTOMER_CLIENT_URL}/paymentSuccess/${property_id}`,
       cancel_url: `${CUSTOMER_CLIENT_URL}/paymentCanceled`,
     });
 

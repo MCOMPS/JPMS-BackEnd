@@ -1,3 +1,4 @@
+const { user } = require("../../../config/db.config");
 const db = require("../index");
 
 exports.getAllCustomers = async () => {
@@ -13,7 +14,7 @@ exports.makeNewCustomer = async (user) => {
 
   const exists = await db.query(query1, values1);
   if (exists.rows.length > 0) {
-    console.log("user already exists");
+    // console.log("user already exists");
     return "User already exists";
   }
 
@@ -30,4 +31,28 @@ exports.makeNewCustomer = async (user) => {
   const values3 = [customer_id, user.name, user.email, user.picture];
 
   return await db.query(query3, values3);
+};
+
+exports.getTenantByAuth0Id = async (auth0_id) => {
+  const query1 = "SELECT id FROM customers WHERE auth0_id=$1";
+  const values1 = [auth0_id];
+  const result1 = await db.query(query1, values1);
+  const customer_id = result1.rows[0].id;
+
+  const query2 = "SELECT * FROM tenants WHERE customer_id=$1";
+  const values2 = [customer_id];
+  return await db.query(query2, values2);
+}; // end of getTenantByAuth0Id
+
+exports.updateProfile = async (auth0_id, ic_no, phone_number) => {
+  // get customer id from auth0_id
+  const query1 = "SELECT id FROM customers WHERE auth0_id=$1";
+  const values1 = [auth0_id];
+  const result1 = await db.query(query1, values1);
+  const customer_id = result1.rows[0].id;
+
+  const query =
+    "UPDATE tenants SET ic_no=$1, phone_number=$2 WHERE customer_id=$3";
+  const values = [ic_no, phone_number, customer_id];
+  return await db.query(query, values);
 };

@@ -1,44 +1,79 @@
 const db = require("../index");
+// slow version (takes almost 6 seconds to load)
+// exports.getMyContracts = async (auth0_id) => {
+//   // Get customer_id
+//   const query1 = "SELECT id FROM customers WHERE auth0_id=$1";
+//   const values1 = [auth0_id];
+//   const result1 = await db.query(query1, values1);
+//   const customer_id = result1.rows[0].id;
 
+//   // Get tenant_id
+//   const query2 = "SELECT id FROM tenants WHERE customer_id=$1";
+//   const values2 = [customer_id];
+//   const result2 = await db.query(query2, values2);
+//   const tenant_id = result2.rows[0].id;
+
+//   // Get contracts by tenant_id
+//   const query3 = "SELECT * FROM contracts WHERE tenant_id=$1";
+//   const values3 = [tenant_id];
+//   const result3 = await db.query(query3, values3);
+//   const contracts = result3.rows;
+
+//   // Map contracts to the desired format
+//   const contractsData = await Promise.all(
+//     contracts.map(async (contract) => {
+//       const property_id = contract.property_id;
+
+//       // Get property from property_id
+//       const query4 = "SELECT * FROM properties WHERE id=$1";
+//       const values4 = [property_id];
+//       const result4 = await db.query(query4, values4);
+//       const property = result4.rows[0];
+
+//       return {
+//         property_id: property.id,
+//         property_name: property.name,
+//         contract_start: contract.contract_start,
+//         contract_end: contract.contract_end,
+//         rent: contract.rent,
+//       };
+//     })
+//   );
+
+//   return contractsData;
+// };
+
+// optimized version:
 exports.getMyContracts = async (auth0_id) => {
-  // Get customer_id
-  const query1 = "SELECT id FROM customers WHERE auth0_id=$1";
+  // Get customer_id and tenant_id in one query
+  const query1 = `
+    SELECT customers.id as customer_id, tenants.id as tenant_id
+    FROM customers
+    JOIN tenants ON tenants.customer_id = customers.id
+    WHERE customers.auth0_id = $1
+  `;
   const values1 = [auth0_id];
   const result1 = await db.query(query1, values1);
-  const customer_id = result1.rows[0].id;
+  const { customer_id, tenant_id } = result1.rows[0];
 
-  // Get tenant_id
-  const query2 = "SELECT id FROM tenants WHERE customer_id=$1";
-  const values2 = [customer_id];
+  // Get contracts and properties in one query
+  const query2 = `
+    SELECT contracts.*, properties.id as property_id, properties.name as property_name
+    FROM contracts
+    JOIN properties ON properties.id = contracts.property_id
+    WHERE contracts.tenant_id = $1
+  `;
+  const values2 = [tenant_id];
   const result2 = await db.query(query2, values2);
-  const tenant_id = result2.rows[0].id;
-
-  // Get contracts by tenant_id
-  const query3 = "SELECT * FROM contracts WHERE tenant_id=$1";
-  const values3 = [tenant_id];
-  const result3 = await db.query(query3, values3);
-  const contracts = result3.rows;
 
   // Map contracts to the desired format
-  const contractsData = await Promise.all(
-    contracts.map(async (contract) => {
-      const property_id = contract.property_id;
-
-      // Get property from property_id
-      const query4 = "SELECT * FROM properties WHERE id=$1";
-      const values4 = [property_id];
-      const result4 = await db.query(query4, values4);
-      const property = result4.rows[0];
-
-      return {
-        property_id: property.id,
-        property_name: property.name,
-        contract_start: contract.contract_start,
-        contract_end: contract.contract_end,
-        rent: contract.rent,
-      };
-    })
-  );
+  const contractsData = result2.rows.map((contract) => ({
+    property_id: contract.property_id,
+    property_name: contract.property_name,
+    contract_start: contract.contract_start,
+    contract_end: contract.contract_end,
+    rent: contract.rent,
+  }));
 
   return contractsData;
 };
